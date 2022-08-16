@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 import SingleCard from './components/SingleCard'
 
@@ -17,6 +17,15 @@ function App() {
   const [choiceOne, setChoiceOne] = useState(null)
   const [choiceTwo, setChoiceTwo] = useState(null)
 
+  useEffect(() => {
+    if (choiceTwo) {
+      if (choiceOne.src === choiceTwo.src) {
+        console.log('match!')
+      } 
+      resetTurn();
+    }
+  }, [choiceOne, choiceTwo])
+
   // shuffle cards for new game
   const shuffleCards = () => {
     const shuffledCards = [...cardImages, ...cardImages]
@@ -33,9 +42,16 @@ function App() {
     choiceOne ? setChoiceTwo(card) : setChoiceOne(card)
   }
 
+  const resetTurn = () => {
+    setChoiceOne(null);
+    setChoiceTwo(null);
+    setTurns(prevTurns => prevTurns + 1);
+  }
+
   return (
     <div className="App">
       <h1>Magic Match</h1>
+      <p>{turns}</p>
       <button onClick={shuffleCards}>New Game</button>
 
       <div className="card-grid">
